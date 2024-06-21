@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  height: 100vh;
+  background: 
+    /* Black overlay with transparency */ linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      /* Adjust the opacity (0.5 for 50% black) */ rgba(0, 0, 0, 0.5)
+    ),
+    /* Background image */ url("/img/bg-3.jpg");
+  background-repeat: no-repeat, repeat;
+  background-size: cover;
+}

@@ -12,25 +12,31 @@ import { useForm } from "react-hook-form"
 type FormValues = {
     email: string;
     password: string;
+    confirmPassword: string;
 }
 
-const Login = () => {
+const Register = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
 
     const form = useForm<FormValues>({
         defaultValues: {
             email: '',
-            password: ''
+            password: '',
+            confirmPassword: ''
         }
     })
 
-    const { register, handleSubmit, formState, control } = form
+    const { register, handleSubmit, formState, control, watch } = form
     const { errors } = formState
 
     const router = useRouter()
 
+    // Watch for changes in the confirmPassword field
+    const confirmPassword = watch('confirmPassword', '');
+
     // Function to handle login process
-    const handleLogin = async (data: FormValues) => {
+    const handleRegister = async (data: FormValues) => {
         console.log("🚀 ~ handleLogin ~ data:", data)
 
     }
@@ -46,9 +52,9 @@ const Login = () => {
             <Container maxWidth="sm" className="bg-stone-200 p-8 mt-24 rounded-md">
                 <Box sx={{ mt: 2 }}>
                     <Typography variant="h4" component="h1" gutterBottom>
-                        Login
+                        Register
                     </Typography>
-                    <form onSubmit={handleSubmit(handleLogin)} noValidate>
+                    <form onSubmit={handleSubmit(handleRegister)} noValidate>
                         <Stack spacing={3}>
                             <TextField
                                 type="email"
@@ -94,10 +100,45 @@ const Login = () => {
                                 helperText={errors.password?.message}
                                 required
                             />
+                            <TextField
+                                type={showPassword ? "text" : "password"}
+                                label="Confirm Password"
+                                variant="outlined"
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            {showConfirmPassword ?
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => setShowConfirmPassword(false)}
+                                                >
+                                                    <VisibilityOff />
+                                                </IconButton>
+                                                :
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => setShowConfirmPassword(true)}
+                                                >
+                                                    <Visibility />
+                                                </IconButton>
+
+                                            }
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                fullWidth
+                                margin="normal"
+                                {...register('confirmPassword', {
+                                    validate: value => value === confirmPassword || 'The passwords do not match'
+                                })}
+                                error={!!errors.confirmPassword}
+                                helperText={errors.confirmPassword?.message}
+                                required
+                            />
                             <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
                                 Login
                             </Button>
-                            <Button type="button" onClick={() => router.push("/register")} variant="outlined" color="secondary" fullWidth sx={{ mt: 2 }}>
+                            <Button variant="outlined" color="secondary" fullWidth sx={{ mt: 2 }}>
                                 Sign Up
                             </Button>
                         </Stack>
@@ -112,4 +153,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Register
